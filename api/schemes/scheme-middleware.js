@@ -9,7 +9,25 @@ const Schemes = require("./scheme-model");
   }
 */
 
-const checkSchemeId = async (req, res, next) => {};
+// NEEDS TO BE COMPLETED AFTER SCHEMA FIELDS HAVE BEEN CREATED => DATA MODEL
+const checkSchemeId = async (req, res, next) => {
+  try {
+    const { scheme_id } = req.params;
+    const scheme = await Schemes.findById(scheme_id);
+    if (scheme.scheme_name) {
+      req.scheme = scheme;
+      next();
+    } else {
+      next({
+        success: false,
+        status: 404,
+        message: `scheme with scheme_id ${scheme_id} not found`,
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
 
 /*
   If `scheme_name` is missing, empty string or not a string:
