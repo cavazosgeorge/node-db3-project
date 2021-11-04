@@ -115,9 +115,16 @@ async function findById(scheme_id) {
 
 // QUERY FUNCTION #3 => FIND STEPS BY ID
 function findSteps(scheme_id) {
-  // EXERCISE C
-  // *** WRITE FUNCTION HERE
-  /*
+  const result = db("steps as st")
+    .select("st.step_id", "st.step_number", "st.instructions", "sc.scheme_name")
+    .leftJoin("schemes as sc", "sc.scheme_id", "st.scheme_id")
+    .where("st.scheme_id", scheme_id)
+    .orderBy("st.step_number", "asc");
+  return result;
+}
+// EXERCISE C
+// *** WRITE FUNCTION HERE
+/*
     1C- Build a query in Knex that returns the following data.
     The steps should be sorted by step_number, and the array
     should be empty if there are no steps for the scheme:
@@ -137,7 +144,6 @@ function findSteps(scheme_id) {
         }
       ]
   */
-}
 
 // QUERY FUNCTION #4 => INSERT NEW SCHEME INTO SCHEME
 function add(scheme) {
