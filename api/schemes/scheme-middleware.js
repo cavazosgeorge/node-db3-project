@@ -23,6 +23,7 @@ const checkSchemeId = async (req, res, next) => {
         status: 404,
         message: `scheme with scheme_id ${scheme_id} not found`,
       });
+      console.log(scheme);
     }
   } catch (error) {
     next(error);

@@ -1,4 +1,9 @@
-function find() { // EXERCISE A
+const db = require("../../data/db-config");
+
+// QUERY FUNCTION #1 => SELECT *
+function find() {
+  // EXERCISE A
+  // *** WRITE FUNCTION HERE
   /*
     1A- Study the SQL query below running it in SQLite Studio against `data/schemes.db3`.
     What happens if we change from a LEFT join to an INNER join?
@@ -17,8 +22,31 @@ function find() { // EXERCISE A
   */
 }
 
-function findById(scheme_id) { // EXERCISE B
+// EXERCISE B => QUERY FUNCTION #2 => FIND BY ID
+// *** WRITE FUNCTION HERE
+async function findById(scheme_id) {
+  const rows = await db("schemes as sc")
+    .select("sc.scheme_name", "st.*")
+    .leftJoin("steps as st", "sc.scheme_id", "st.scheme_id")
+    .where({
+      "sc.scheme_id": scheme_id,
+    })
+    .orderBy("st.step_number", "asc");
+  const steps = rows
+    .filter((row) => row.step_id)
+    .map(({ step_id, step_number, instructions }) => {
+      return { step_id, step_number, instructions };
+    });
+  const result = {
+    success: true,
+    scheme_id: Number(scheme_id),
+    scheme_name: rows.reduce((acc, curr) => {
+      return curr.scheme_name;
+    }, null),
+  };
+  return result;
   /*
+
     1B- Study the SQL query below running it in SQLite Studio against `data/schemes.db3`:
 
       SELECT
@@ -85,7 +113,10 @@ function findById(scheme_id) { // EXERCISE B
   */
 }
 
-function findSteps(scheme_id) { // EXERCISE C
+// QUERY FUNCTION #3 => FIND STEPS BY ID
+function findSteps(scheme_id) {
+  // EXERCISE C
+  // *** WRITE FUNCTION HERE
   /*
     1C- Build a query in Knex that returns the following data.
     The steps should be sorted by step_number, and the array
@@ -108,13 +139,18 @@ function findSteps(scheme_id) { // EXERCISE C
   */
 }
 
-function add(scheme) { // EXERCISE D
+// QUERY FUNCTION #4 => INSERT NEW SCHEME INTO SCHEME
+function add(scheme) {
+  // EXERCISE D
+  // *** WRITE FUNCTION HERE
   /*
     1D- This function creates a new scheme and resolves to _the newly created scheme_.
   */
 }
 
-function addStep(scheme_id, step) { // EXERCISE E
+// QUERY FUNCTION #5 => INSERT NEW STEP WITH SCHEME ID
+function addStep(scheme_id, step) {
+  // EXERCISE E
   /*
     1E- This function adds a step to the scheme with the given `scheme_id`
     and resolves to _all the steps_ belonging to the given `scheme_id`,
@@ -128,4 +164,4 @@ module.exports = {
   findSteps,
   add,
   addStep,
-}
+};
